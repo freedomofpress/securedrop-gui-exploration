@@ -1,34 +1,29 @@
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import { useAppSelector, useAppDispatch } from "./hooks";
-import { increment } from "./features/counter/counterSlice";
-
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import { set, clear } from "./features/session/sessionSlice";
 
 function App() {
-  const count = useAppSelector((state) => state.counter.value);
+  const session = useAppSelector((state) => state.session);
   const dispatch = useAppDispatch();
 
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <pre>{JSON.stringify(session)}</pre>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => dispatch(increment())}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Form>
+        <Form.Label htmlFor="username">Username</Form.Label>
+        <Form.Control id="username" type="text" />
+
+        <Form.Label htmlFor="password">Password</Form.Label>
+        <Form.Control id="password" type="password" />
+
+        <Form.Label htmlFor="totp">TOTP</Form.Label>
+        <Form.Control id="totp" type="text" />
+
+        <Button>Log In</Button>
+      </Form>
     </>
   );
 }
