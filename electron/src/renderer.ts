@@ -29,3 +29,9 @@
 import './index.css';
 
 console.log('👋 This message is being logged by "renderer.ts", included via Vite');
+
+document.getElementById('ping')?.addEventListener('click', async () => {
+  const response = await window.electronAPI.ping();
+
+  console.log("response: ", response);
+});
