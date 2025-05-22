@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, session } from 'electron';
 import path from 'node:path';
 
 const createWindow = () => {
@@ -20,7 +20,27 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    let csp = ["default-src 'none'", "script-src 'self'"];
+    if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+      const viteURL = MAIN_WINDOW_VITE_DEV_SERVER_URL.replace('http://', 'ws://')
+      csp.push(`connect-src ${viteURL}`);
+      // TODO: figure out how to use vite without inline styles
+      csp.push("style-src 'self' 'unsafe-inline'");
+    } else {
+      csp.push("style-src 'self'");
+    }
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': [csp.join('; ')]
+      }
+    })
+  });
 };
+
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

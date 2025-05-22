@@ -35,3 +35,17 @@ document.getElementById('ping')?.addEventListener('click', async () => {
 
   console.log("response: ", response);
 });
+
+document.getElementById('xss')?.addEventListener('click', async () => {
+  const script = document.createElement('script');
+  script.innerHTML = 'alert("XSS"); console.log(window.electronAPI);';
+  document.body.appendChild(script);
+});
+
+document.getElementById('framed-xss')?.addEventListener('click', async () => {
+  const iframe = document.createElement('iframe');
+  // Disable sandboxing to further verify window.electronAPI doesn't exist in the frame
+  iframe.sandbox = '';
+  iframe.srcdoc = '<script>console.log(window.electronAPI);</script>';
+  document.body.appendChild(iframe);
+});
