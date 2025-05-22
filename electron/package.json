@@ -1,8 +1,8 @@
 {
-  "name": "electron",
-  "productName": "electron",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "name": "securedrop-gui-exploration",
+  "productName": "SecureDrop GUI exploration",
+  "version": "0.0.1",
+  "description": "",
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -11,11 +11,6 @@
     "lint": "eslint --ext .ts,.tsx ."
   },
   "keywords": [],
-  "author": {
-    "name": "Kunal Mehta",
-    "email": "legoktm@debian.org"
-  },
-  "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^7.8.1",
     "@electron-forge/plugin-auto-unpack-natives": "^7.8.1",
