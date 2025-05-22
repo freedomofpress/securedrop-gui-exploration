@@ -43,6 +43,12 @@ class MyAppState extends ChangeNotifier {
 
   }
 
+  void tryLogin() {
+    // banana is the token, the token is banana
+    authToken = "banana";
+    notifyListeners();
+  }
+
 }
 
 class SDMain extends StatefulWidget {
@@ -69,11 +75,12 @@ class _SDMainState extends State<SDMain> {
     Widget page;
 
   if (appState.authToken.isEmpty) {
-    page = Placeholder(color: Color.fromARGB(255, 54, 133, 2));
+    // page = Placeholder(color: Color.fromARGB(255, 54, 133, 2));
+    page = LoginForm();
   }
-    else {
+  else {
     page = Placeholder(color: Color.fromARGB(255, 111, 112, 199));
-    }
+  }
 
 
     return Scaffold(
@@ -91,6 +98,96 @@ class _SDMainState extends State<SDMain> {
           )
         ),
       ),
+    );
+  }
+}
+
+// Let's add the login form page
+class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
+
+  @override
+  LoginFormState createState() {
+    return LoginFormState();
+  }
+}
+
+class LoginFormState extends State<LoginForm> {
+  final _formKey = GlobalKey<FormState>();
+
+
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
+    return Form (
+      key: _formKey,
+      child: Column(
+      children: <Widget> [
+        Text("Log in here: "),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextFormField(
+            decoration: const InputDecoration(
+              border:OutlineInputBorder(),
+              labelText: 'Username:'
+            ),
+                // The validator receives the text that the user has entered.
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your username';
+              }
+             return null;
+            },
+              ),
+        ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                        decoration: const InputDecoration(
+              border:OutlineInputBorder(),
+              labelText: 'Passphrase:'
+                        ),
+                    // The validator receives the text that the user has entered.
+                        validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your passphrase';
+              }
+                         return null;
+                        },
+                  ),
+            ),
+                        Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                        decoration: const InputDecoration(
+              border:OutlineInputBorder(),
+              labelText: 'Two-factor token:'
+                        ),
+                    // The validator receives the text that the user has entered.
+                        validator: (value) {
+              if (value == null || value.isEmpty || value.length != 6) {
+                return 'Please enter a valid 6-char 2FA token';
+              }
+                         return null;
+                        },
+                  ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+               // Validate returns true if the form is valid, or false otherwise.
+                if (_formKey.currentState!.validate()) {
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Logging in')),
+                  );
+                appState.tryLogin();
+                }
+              },
+             child: const Text('Submit'),
+          ),
+      ],
+    ),
     );
   }
 }
