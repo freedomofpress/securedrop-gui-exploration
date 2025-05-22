@@ -30,12 +30,11 @@ export const sessionSlice = createSlice({
     clear: (state) => {
       state = emptyState;
     },
-    set: (state, action: PayloadAction<SessionState>) => {
-      state = action.payload;
-    },
+    set: (state, action: PayloadAction<SessionState>) => action.payload,
   },
 });
 
+export type { SessionState };
 export const { clear, set } = sessionSlice.actions;
 export const getSessionState = (state: RootState) => state.session;
 export default sessionSlice.reducer;
