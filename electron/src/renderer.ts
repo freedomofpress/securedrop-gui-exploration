@@ -27,6 +27,7 @@
  */
 
 import './index.css';
+import { ProxyRequest } from './types';
 
 console.log('👋 This message is being logged by "renderer.ts", included via Vite');
 
@@ -49,3 +50,24 @@ document.getElementById('framed-xss')?.addEventListener('click', async () => {
   iframe.srcdoc = '<script>console.log(window.electronAPI);</script>';
   document.body.appendChild(iframe);
 });
+
+document.getElementById('login-button')?.addEventListener('click', async () => {
+  const totp = (document.getElementById('totp') as HTMLInputElement).value;
+  await login(totp);
+});
+
+async function login(totp: string) {
+  const resp = await window.electronAPI.request({
+    method: 'POST',
+    path_query: '/api/v1/token',
+    stream: false,
+    body: JSON.stringify({
+      username: 'journalist',
+      passphrase: 'correct horse battery staple profanity oil chewy',
+      one_time_code: totp
+    }),
+    headers: {}
+  } as ProxyRequest);
+
+  console.log(resp);
+}

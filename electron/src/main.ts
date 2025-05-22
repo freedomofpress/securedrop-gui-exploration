@@ -1,5 +1,7 @@
 import { app, BrowserWindow, ipcMain, session } from 'electron';
 import path from 'node:path';
+import child_process from 'node:child_process';
+import { ProxyRequest } from './types';
 
 const createWindow = () => {
   // Create the browser window.
@@ -51,3 +53,46 @@ ipcMain.handle('ping', (event) => {
   console.log('ping');
   return 'pong';
 });
+
+ipcMain.handle('request', async (event, request: ProxyRequest) => {
+  console.log('incoming request: ', request);
+  const result = await runProxy(request);
+  console.log('outgoing response: ', result);
+  return result;
+});
+
+async function runProxy(request: ProxyRequest) {
+  return new Promise((resolve, reject) => {
+    const process = child_process.spawn('/home/user/.cargo/target/debug/securedrop-proxy', [], {
+      env: {"SD_PROXY_ORIGIN": "https://demo-journalist.securedrop.org/"}
+    });
+
+    let stdout = '';
+    let stderr = '';
+
+    process.stdout.on('data', (data) => {
+      stdout += data.toString();
+    });
+
+    process.stderr.on('data', (data) => {
+      stderr += data.toString();
+    });
+
+    process.on('close', (code) => {
+      if (code === 0) {
+        resolve({ stdout, stderr, code });
+      } else {
+        reject(new Error(`Process exited with code ${code}: ${stderr}`));
+      }
+    });
+
+    // Handle process errors
+    process.on('error', (error) => {
+      reject(error);
+    });
+
+    // Write input and close stdin
+    process.stdin.write(JSON.stringify(request) + '\n');
+    process.stdin.end();
+  });
+}
