@@ -51,13 +51,27 @@ function App() {
       </div>
       <Form>
         <Form.Label htmlFor="username">Username</Form.Label>
-        <Form.Control id="username" type="text" ref={username} />
+        <Form.Control
+          id="username"
+          type="text"
+          ref={username}
+          value="journalist"
+        />
 
         <Form.Label htmlFor="passphrase">Passphrase</Form.Label>
-        <Form.Control id="passphrase" type="passphrase" ref={passphrase} />
+        <Form.Control
+          id="passphrase"
+          type="passphrase"
+          ref={passphrase}
+          value="correct horse battery staple profanity oil chewy"
+        />
 
         <Form.Label htmlFor="totp">TOTP</Form.Label>
         <Form.Control id="totp" type="text" ref={totp} />
+        <Form.Text>
+          Copy-paste the current TOTP token from the{" "}
+          <a href="https://demo.securedrop.org/">SecureDrop demo server</a>.
+        </Form.Text>
 
         <Button onClick={() => authenticate()}>Log In</Button>
       </Form>
