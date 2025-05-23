@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
+
 
 void main() {
   runApp(const MyApp());
@@ -26,12 +28,58 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class ProxyRequest {
+  ProxyRequest({
+    required this.method,
+    required this.pathQuery,
+    required this.stream,
+    required this.body,
+    this.headers,
+  });
+
+  final String method;
+  final String pathQuery;
+  final bool stream;
+  final String body;
+  final Map<String, dynamic>? headers;
+
+  Map<String, dynamic> toJson() =>
+  {
+    'method': method,
+    'path_query': pathQuery,
+    'stream': stream,
+    'body': body,
+    'headers': headers,
+  };
+
+}
+
 class MyAppState extends ChangeNotifier {
   // global application state lives here - we'd likely use something like Bloc for state management in a "real" app
   String authToken = '';
   // gonna ignore token expiry for now but we'd need to keep an eye on it otherwise
   // authExpiry = DateTime.now()
   final sourceList = <String>[];
+
+  final jsonEncoder = JsonEncoder();
+
+  void _proxyCall(
+    {
+      required String callMethod,
+      required String pathQuery,
+      required stream,
+      required String body,
+      required Map<String, dynamic> headers
+    } 
+    ) {
+      final heedTheCall = ProxyRequest(
+        method: callMethod, 
+        pathQuery: pathQuery, 
+        stream: stream, 
+        body: body, 
+        headers: headers);
+    print(jsonEncoder.convert(heedTheCall));
+  }
 
   void syncSources() {
     // real sync goes here - this just adds 10 new random source names
@@ -45,8 +93,17 @@ class MyAppState extends ChangeNotifier {
   void tryLogin() {
     // banana is the token, the token is banana
     authToken = "banana";
+    _proxyCall(
+      callMethod: "POST",
+      pathQuery: "/api/v1/login",
+      stream: false,
+      body: jsonEncode({"username": "potato", "passphrase": "spatula", "totp": "123456"}),
+      headers: {"a": 1, "b": 2}
+      );
+
     notifyListeners();
   }
+
 
   void logout() {
     authToken = '';
