@@ -1,8 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import sessionReducer from "./features/session/sessionSlice";
+import sourcelistReducer from "./features/sourcelist/sourcelistSlice";
 
 const store = configureStore({
-  reducer: { session: sessionReducer },
+  reducer: {
+    session: sessionReducer,
+    sourcelist: sourcelistReducer,
+   },
 });
 
 export type AppStore = typeof store;

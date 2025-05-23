@@ -6,8 +6,8 @@ import { ProxyRequest } from '../ipc/types';
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 1000,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -21,7 +21,7 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     let csp = ["default-src 'none'", "script-src 'self' 'unsafe-inline'"];
