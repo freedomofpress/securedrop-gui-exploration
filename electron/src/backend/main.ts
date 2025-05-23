@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, session } from 'electron';
 import path from 'node:path';
 import child_process from 'node:child_process';
-import { ProxyRequest } from './types';
+import { ProxyRequest } from '../ipc/types';
 
 const createWindow = () => {
   // Create the browser window.
@@ -24,7 +24,7 @@ const createWindow = () => {
   mainWindow.webContents.openDevTools();
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    let csp = ["default-src 'none'", "script-src 'self'"];
+    let csp = ["default-src 'none'", "script-src 'self' 'unsafe-inline'"];
     if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
       const viteURL = MAIN_WINDOW_VITE_DEV_SERVER_URL.replace('http://', 'ws://')
       csp.push(`connect-src ${viteURL}`);
