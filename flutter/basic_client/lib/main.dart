@@ -34,18 +34,22 @@ class MyAppState extends ChangeNotifier {
   final sourceList = <String>[];
 
   void syncSources() {
-    // real sync goes here - this just adds 100 new random source names
-    final newSources = generateWordPairs().take(100);
+    // real sync goes here - this just adds 10 new random source names
+    final newSources = generateWordPairs().take(10);
     for (final s in newSources){
       sourceList.add(s.asCamelCase);
       notifyListeners();
     }
-
   }
 
   void tryLogin() {
     // banana is the token, the token is banana
     authToken = "banana";
+    notifyListeners();
+  }
+
+  void logout() {
+    authToken = '';
     notifyListeners();
   }
 
@@ -79,7 +83,7 @@ class _SDMainState extends State<SDMain> {
     page = LoginForm();
   }
   else {
-    page = Placeholder(color: Color.fromARGB(255, 111, 112, 199));
+    page = SourceListPage();
   }
 
 
@@ -89,14 +93,9 @@ class _SDMainState extends State<SDMain> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      // Not sure we need the Center - it just wraps an Expanded Widget that basically takes up all available space
-      body: Center(
-        child: Expanded(
-          child: Container(
-            color: Theme.of(context).colorScheme.primaryContainer,
-            child: page,
-          )
-        ),
+      body: Container(
+        color: Theme.of(context).colorScheme.primaryContainer,
+        child: page,
       ),
     );
   }
@@ -188,6 +187,94 @@ class LoginFormState extends State<LoginForm> {
           ),
       ],
     ),
+    );
+  }
+}
+
+// Let's add the source list page...
+// Define the Source List view
+class SourceListView extends StatelessWidget {
+  const SourceListView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var appstate = context.watch<MyAppState>();
+
+    return Container(
+      width: 350,
+      color: const Color.fromARGB(255, 154, 195, 241),
+      child: Flexible(
+        child: ListView.separated(
+
+          scrollDirection: Axis.vertical,
+          padding: const EdgeInsets.all(8),
+          itemCount: appstate.sourceList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return SizedBox(
+
+              height: 50,
+              child:  Text(appstate.sourceList[index]),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) => const Divider(),
+        ),
+      ),
+    );
+  }
+}
+
+class SourceListPage extends StatelessWidget {
+  const SourceListPage({super.key});
+
+
+  @override
+  Widget build(BuildContext context) {
+    var appstate = context.watch<MyAppState>();
+    String sourceText = "No Sources";
+    if (appstate.sourceList.isNotEmpty) {
+      sourceText  = "${appstate.sourceList.length} Sources";
+    }
+
+
+    return Scaffold(
+      body: Column(
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,            
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(sourceText),
+              ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  appstate.syncSources();
+                },
+                icon: Icon(Icons.sync),
+                label: Text('Sync'),
+              ),
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  appstate.logout();
+                },
+                child: Text('Logout'),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SourceListView(),
+                Expanded(child: Placeholder())
+              ],
+            ),
+          ),
+        ]
+      ),
     );
   }
 }
