@@ -1,0 +1,47 @@
+#root .container {
+  max-width: 100%;
+  width: 100%;
+}
+
+.sourcelist {
+    height: 100vh;
+    background-color: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+    overflow-y: auto;
+}
+
+
+.sourcelist-item {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.sourcelist-item:hover {
+    background-color: #e9ecef;
+}
+
+.sourcelist-item.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.sourcemain {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.sourcemain-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 1rem;
+}
+
+.sourcemain-content {
+    flex: 1;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+}
