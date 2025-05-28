@@ -72,6 +72,8 @@ class MyAppState extends ChangeNotifier {
   // authExpiry = DateTime.now()
   final sourceList = <String>[];
 
+  int selectedSource = -1;
+
   final jsonEncoder = JsonEncoder();
 
   // we don't need async network calls but we do need async proxy calls, truly there is no escape
@@ -126,6 +128,12 @@ class MyAppState extends ChangeNotifier {
       sourceList.add(s.asCamelCase);
       notifyListeners();
     }
+  }
+
+  void selectSource(int i) {
+    selectedSource = i;
+    notifyListeners();
+
   }
 
   void tryLogin(String username, String passphrase, String oneTimeCode) {

@@ -9,37 +9,41 @@ class SourceListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appstate = context.watch<MyAppState>();
-    String sourceText = "No Sources";
+    String sourceText = "Hello ${appstate.journalistName}, No sources yet";
     if (appstate.sourceList.isNotEmpty) {
-      sourceText = "${appstate.sourceList.length} Sources";
+      sourceText = "Hello ${appstate.journalistName}, ${appstate.sourceList.length} sources found";
     }
 
     return Scaffold(
       body: Column(
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text(sourceText),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  appstate.syncSources();
-                },
-                icon: Icon(Icons.sync),
-                label: Text('Sync'),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  appstate.logout();
-                },
-                child: Text('Logout'),
-              ),
-            ],
+          Container(
+            color: Color.fromARGB(255, 227, 229, 255),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(sourceText),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    appstate.syncSources();
+                  },
+                  icon: Icon(Icons.sync),
+                  label: Text('Sync'),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    appstate.logout();
+                  },
+                  icon: Icon(Icons.logout),
+                  label: Text('Logout'),
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: Row(
@@ -47,7 +51,11 @@ class SourceListPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SourceListView(),
-                Expanded(child: Placeholder()),
+                Flexible(
+                  child: (appstate.selectedSource >= 0 && appstate.selectedSource < appstate.sourceList.length) ? 
+                    Text("Conversation: ${appstate.sourceList[appstate.selectedSource]}") : 
+                    Placeholder(),
+                  ),
               ],
             ),
           ),
