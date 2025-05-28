@@ -11,7 +11,7 @@ function SessionView() {
             ? `${session.journalist_first_name} ${session.journalist_last_name}`
             : session.journalist_uuid}
         </summary>
-        <pre>{JSON.stringify(session, null, 2)}</pre>
+        <pre data-testid="debug">{JSON.stringify(session, null, 2)}</pre>
       </details>
   );
 }
