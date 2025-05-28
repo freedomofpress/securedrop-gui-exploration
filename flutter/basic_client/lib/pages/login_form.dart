@@ -70,6 +70,7 @@ class LoginFormState extends State<LoginForm> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   controller: passphraseController,
+                  obscureText: true,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Passphrase:',
@@ -86,6 +87,7 @@ class LoginFormState extends State<LoginForm> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  key: ValueKey("oneTimeField"),
                   controller: oneTimeCodeController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
