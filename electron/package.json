@@ -9,7 +9,7 @@
     "package": "electron-forge package",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
-    "test": "vitest"
+    "test": "vitest --config vite.renderer.config.ts"
   },
   "keywords": [],
   "devDependencies": {
