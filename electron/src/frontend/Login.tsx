@@ -1,6 +1,16 @@
 import { useRef } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label"
 import { useAppDispatch, useAppSelector } from "./hooks";
 import type { SessionState } from "./features/session/sessionSlice";
 import { set, clear } from "./features/session/sessionSlice";
@@ -54,31 +64,38 @@ function Login() {
   const totp = useRef<HTMLInputElement>(null);
   return (
       <Form>
-        <Form.Group>
-          <Form.Label htmlFor="username">Username</Form.Label>
-          <Form.Control
+        <FormItem>
+          <FormLabel htmlFor="username">Username</FormLabel>
+          <FormControl
             id="username"
             type="text"
             ref={username}
             value="journalist"
           />
+        </FormItem>
 
-          <Form.Label htmlFor="passphrase">Passphrase</Form.Label>
-          <Form.Control
+        <FormItem>
+          <FormLabel htmlFor="passphrase">Passphrase</FormLabel>
+          <FormControl
             id="passphrase"
-            type="passphrase"
             ref={passphrase}
-            value="correct horse battery staple profanity oil chewy"
-          />
+          >
+            <Input type="password" value="correct horse battery staple profanity oil chewy"/>
+          </FormControl>
+        </FormItem>
 
-          <Form.Label htmlFor="totp">TOTP</Form.Label>
-          <Form.Control id="totp" type="text" ref={totp} />
-          <Form.Text>
+        <FormItem>
+          <FormLabel htmlFor="totp">TOTP</FormLabel>
+          <FormControl id="totp" ref={totp}>
+            <Input placeholder="shadcn"/>
+          </FormControl>
+          <FormDescription>
             Copy-paste the current TOTP token from the{" "}
             <a href="https://demo.securedrop.org/">SecureDrop demo server</a>.
-          </Form.Text>
-        </Form.Group>
+          </FormDescription>
+        </FormItem>
 
+        <FormMessage>Log in</FormMessage>
         <Button onClick={() => authenticate()}>Log In</Button>
       </Form>
   );
