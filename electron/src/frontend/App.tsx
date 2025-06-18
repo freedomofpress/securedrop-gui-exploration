@@ -15,9 +15,7 @@ function App() {
     );
   }
   return (
-    <Container>
       <Login />
-    </Container>
   );
 }
 

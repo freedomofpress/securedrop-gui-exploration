@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+import { Button } from "@radix-ui/themes";
+import { Form } from "radix-ui";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import type { SessionState } from "./features/session/sessionSlice";
 import { set, clear } from "./features/session/sessionSlice";
@@ -53,34 +53,67 @@ function Login() {
   const passphrase = useRef<HTMLInputElement>(null);
   const totp = useRef<HTMLInputElement>(null);
   return (
-      <Form>
-        <Form.Group>
-          <Form.Label htmlFor="username">Username</Form.Label>
-          <Form.Control
-            id="username"
-            type="text"
-            ref={username}
-            value="journalist"
-          />
-
-          <Form.Label htmlFor="passphrase">Passphrase</Form.Label>
-          <Form.Control
-            id="passphrase"
-            type="passphrase"
-            ref={passphrase}
-            value="correct horse battery staple profanity oil chewy"
-          />
-
-          <Form.Label htmlFor="totp">TOTP</Form.Label>
-          <Form.Control id="totp" type="text" ref={totp} />
-          <Form.Text>
-            Copy-paste the current TOTP token from the{" "}
-            <a href="https://demo.securedrop.org/">SecureDrop demo server</a>.
-          </Form.Text>
-        </Form.Group>
-
-        <Button onClick={() => authenticate()}>Log In</Button>
-      </Form>
+	<Form.Root className="FormRoot" onSubmit={(event) => {
+    event.preventDefault();
+    authenticate();
+  }}>
+		<Form.Field className="FormField" name="username">
+			<div
+				style={{
+					display: "flex",
+					alignItems: "baseline",
+					justifyContent: "space-between",
+				}}
+			>
+				<Form.Label className="FormLabel">Username</Form.Label>
+				<Form.Message className="FormMessage" match="valueMissing">
+					Username is required
+				</Form.Message>
+			</div>
+			<Form.Control asChild>
+				<input type="text" required value="journalist" ref={username} />
+			</Form.Control>
+		</Form.Field>
+		<Form.Field className="FormField" name="passphrase">
+			<div
+				style={{
+					display: "flex",
+					alignItems: "baseline",
+					justifyContent: "space-between",
+				}}
+			>
+				<Form.Label className="FormLabel">Passphrase</Form.Label>
+				<Form.Message className="FormMessage" match="valueMissing">
+					Passphrase is required
+				</Form.Message>
+			</div>
+			<Form.Control asChild>
+				<input type="password" required value="correct horse battery staple profanity oil chewy" ref={passphrase} />
+			</Form.Control>
+		</Form.Field>
+		<Form.Field className="FormField" name="totp">
+			<div
+				style={{
+					display: "flex",
+					alignItems: "baseline",
+					justifyContent: "space-between",
+				}}
+			>
+				<Form.Label className="FormLabel">TOTP</Form.Label>
+				<Form.Message className="FormMessage" match="valueMissing">
+					TOTP is required
+				</Form.Message>
+			</div>
+			<Form.Control asChild>
+				<input type="text" required ref={totp} />
+			</Form.Control>
+		</Form.Field>
+		<Form.Submit asChild>
+			<Button>
+				Log In
+			</Button>
+		</Form.Submit>
+	</Form.Root>
   );
 }
 
