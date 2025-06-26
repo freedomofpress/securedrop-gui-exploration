@@ -1,6 +1,5 @@
 import { useRef } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+import { Button, Form, Input } from 'antd';
 import { useAppDispatch, useAppSelector } from "./hooks";
 import type { SessionState } from "./features/session/sessionSlice";
 import { set, clear } from "./features/session/sessionSlice";
@@ -11,15 +10,21 @@ const JOURNALIST_API = {
   token: `${JOURNALIST_API_BASE}/token`,
 };
 
+type FieldType = {
+  username: string;
+  passphrase: string;
+  totp: string;
+};
+
 function Login() {
   const session = useAppSelector((state) => state.session);
   const dispatch = useAppDispatch();
 
-  const authenticate = async function () {
+  const authenticate = async function (fields: FieldType) {
     const body = {
-      username: username.current?.value,
-      passphrase: passphrase.current?.value,
-      one_time_code: totp.current?.value,
+      username: fields.username,
+      passphrase: fields.passphrase,
+      one_time_code: fields.totp,
     };
     console.log("sent login request");
     const res = await window.electronAPI.request({
@@ -53,33 +58,31 @@ function Login() {
   const passphrase = useRef<HTMLInputElement>(null);
   const totp = useRef<HTMLInputElement>(null);
   return (
-      <Form>
-        <Form.Group>
-          <Form.Label htmlFor="username">Username</Form.Label>
-          <Form.Control
-            id="username"
-            type="text"
-            ref={username}
-            value="journalist"
-          />
+      <Form
+        onFinish={authenticate}>
+          <Form.Item<FieldType>
+            label="Username"
+            name="username"
+            rules={[{ required: true }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item<FieldType>
+            label="Passphrase"
+            name="passphrase"
+            rules={[{ required: true }]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item<FieldType>
+            label="TOTP"
+            name="totp"
+            rules={[{ required: true }]}
+          >
+            <Input.OTP />
+          </Form.Item>
 
-          <Form.Label htmlFor="passphrase">Passphrase</Form.Label>
-          <Form.Control
-            id="passphrase"
-            type="passphrase"
-            ref={passphrase}
-            value="correct horse battery staple profanity oil chewy"
-          />
-
-          <Form.Label htmlFor="totp">TOTP</Form.Label>
-          <Form.Control id="totp" type="text" ref={totp} />
-          <Form.Text>
-            Copy-paste the current TOTP token from the{" "}
-            <a href="https://demo.securedrop.org/">SecureDrop demo server</a>.
-          </Form.Text>
-        </Form.Group>
-
-        <Button onClick={() => authenticate()}>Log In</Button>
+        <Button block type="primary" htmlType="submit">Log In</Button>
       </Form>
   );
 }
